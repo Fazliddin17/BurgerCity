@@ -37,6 +37,8 @@ import uz.zafar.primetech.json.read.GetLocation;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -86,7 +88,10 @@ public class UserRole {
                 if (text.equals("/start")) {
                     startCommand(user);
                 } else {
-                    LocalTime currentTime = LocalTime.now();
+                    ZoneId uzbekistanZone = ZoneId.of("Asia/Tashkent");
+                    ZonedDateTime uzbekistanTime = ZonedDateTime.now(uzbekistanZone);
+                    LocalTime currentTime = uzbekistanTime.toLocalTime();
+
                     if (currentTime.isAfter(LocalTime.of(23, 0)) || currentTime.isBefore(LocalTime.of(9, 0))) {
                         if (!"choose lang".equals(eventCode)) {
                             String aa = user.getLang().equals("uz") ? "Bot hozirda ishlamayapti. Iltimos, ertalab 09:00 dan kechasi 23:00 gacha murojaat qiling." : (
@@ -97,6 +102,7 @@ public class UserRole {
                             return;
                         }
                     }
+
                     if (eventCode.equals("choose lang")) {
                         chooseLang(text, user, null, messageId);
                     } else if (eventCode.equals("request contact")) {
