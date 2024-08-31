@@ -139,7 +139,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
 
         String role = user.getRole();
-        File file = new File("src/main/java/uz/zafar/primetech/server");
+        File file = new File("src/main/java/uz/zafar/primetech/categorylar");
         if (!file.exists())
             file.mkdir();
         String url = file.getAbsolutePath();
