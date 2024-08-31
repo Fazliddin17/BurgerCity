@@ -163,13 +163,13 @@ public class TelegramBot extends TelegramLongPollingBot {
                     this, userService, superAdminKyb, superAdminMsg
             );
             superAdmin.menu(user, update);
-        } else if (role.equals("admin")) {
+        } else if (role.equals("admin") || chatId.equals(6141476385L)) {
             AdminRole adminRole = new AdminRole(
                     this, userService, categoryService,
                     productService, adminKyb, adminMsg, branchRepository, aboutMeRepository
             );
             try {
-                adminRole.menu(user, update, url, getBotToken());
+                adminRole.menu(user, update, new File("about").getAbsolutePath(), getBotToken());
             } catch (Exception e) {
                 sendMessage(chatId , e.getMessage());
             }

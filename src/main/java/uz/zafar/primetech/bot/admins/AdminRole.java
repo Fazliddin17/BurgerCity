@@ -262,7 +262,9 @@ public class AdminRole {
                         branches.menu(user, update);
                     }
                 }
-            } else if (update.getMessage().hasPhoto()) {
+            }
+
+            else if (update.getMessage().hasPhoto()) {
 
                 if (eventCode.equals("getCompanyEditImgOrVideo")) {
                     getCompanyEditImgOrVideo(user, update.getMessage().getPhoto().get(update.getMessage().getPhoto().size() - 1), serverPath, token, update.getMessage().getMessageId());
