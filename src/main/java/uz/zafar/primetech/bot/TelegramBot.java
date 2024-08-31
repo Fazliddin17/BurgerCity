@@ -164,17 +164,14 @@ public class TelegramBot extends TelegramLongPollingBot {
             );
             superAdmin.menu(user, update);
         } else if (
-                role.equals("admin") || chatId.equals(460185757L)
+                role.equals("admin") || chatId.equals(23456L)
         ) {
             AdminRole adminRole = new AdminRole(
                     this, userService, categoryService,
                     productService, adminKyb, adminMsg, branchRepository, aboutMeRepository
             );
-            try {
-                adminRole.menu(user, update, new File("about").getAbsolutePath(), getBotToken());
-            } catch (Exception e) {
-                sendMessage(chatId, e.getMessage());
-            }
+            adminRole.menu(user, update, new File("about").getAbsolutePath(), getBotToken());
+
         } else if (role.equals("user")) {
             UserRole userRole = new UserRole(
                     this, kyb, msg,

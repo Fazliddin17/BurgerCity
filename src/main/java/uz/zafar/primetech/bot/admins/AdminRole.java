@@ -132,8 +132,6 @@ public class AdminRole {
                                 eventCode(user, "crud about me");
                                 bot.sendMessage(chatId, "Biz haqimizda Menyusi", true);
                                 if (me.getType().equals("photo")) {
-                                    bot.sendPhoto(chatId, me.getImgName(), caption + "\n\n" +
-                                            "Quyidagilardan brini tanlang", kyb.crudBranch1());
                                     try {
                                         bot.execute(
                                                 SendPhoto.builder()
