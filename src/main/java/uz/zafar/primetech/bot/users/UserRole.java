@@ -31,7 +31,6 @@ import uz.zafar.primetech.db.repositories.AboutMeRepository;
 import uz.zafar.primetech.db.repositories.BranchRepository;
 import uz.zafar.primetech.db.service.*;
 import uz.zafar.primetech.dto.CallbackData;
-import uz.zafar.primetech.dto.UserDto;
 import uz.zafar.primetech.json.read.GetLocation;
 
 import java.io.File;
@@ -42,7 +41,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 @Log4j2
 
