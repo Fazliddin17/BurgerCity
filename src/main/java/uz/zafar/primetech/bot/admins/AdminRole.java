@@ -125,7 +125,6 @@ public class AdminRole {
                                 userService.save(user);
                             } else {
                                 AboutMe me = aboutMeRepository.findAll().get(0);
-                                File file = new File(serverPath + "/aboutme/" + me.getImgName());
                                 String caption = """
                                         Kompaniya nomi: %s
                                         ☎️ Aloqa markazi: (Telefon raqam): %s
@@ -133,14 +132,28 @@ public class AdminRole {
                                 eventCode(user, "crud about me");
                                 bot.sendMessage(chatId, "Biz haqimizda Menyusi", true);
                                 if (me.getType().equals("photo")) {
-                                    bot.sendPhoto(chatId, file, caption + "\n\nQuyidagilardan brini tanlang", kyb.crudBranch1());
+                                    bot.sendPhoto(chatId, me.getImgName(), caption + "\n\n" +
+                                            "Quyidagilardan brini tanlang", kyb.crudBranch1());
+                                    try {
+                                        bot.execute(
+                                                SendPhoto.builder()
+                                                        .chatId(chatId)
+                                                        .photo(new InputFile(me.getImgName()))
+                                                        .replyMarkup(kyb.crudBranch1())
+                                                        .caption(caption + "\n\n" +
+                                                                "Quyidagilardan brini tanlang")
+                                                        .build()
+                                        );
+                                    } catch (TelegramApiException e) {
+                                        log.error(e.getMessage(), e);
+                                    }
                                     return;
                                 }
                                 if (me.getType().equals("video")) {
                                     SendVideo sendVideo = new SendVideo();
                                     sendVideo.setChatId(chatId);
                                     InputFile video = new InputFile();
-                                    video.setMedia(file);
+                                    video.setMedia(me.getImgName());
                                     sendVideo.setVideo(video);
                                     sendVideo.setCaption(caption + "\n\nQuyidagilardan brini tanlang");
                                     sendVideo.setReplyMarkup(kyb.crudBranch1());
@@ -291,23 +304,11 @@ public class AdminRole {
                     bot.sendMessage(chatId, "Reklamangiz " + count + " kishiga muvaffaqiyatli yetkazildi");
                 }
                 if (eventCode.equals("get img or video")) {
-                    File file1 = new File(serverPath + "/aboutme");
-                    if (!file1.exists()) {
-                        file1.mkdir();
-                    }
-                    for (String s : file1.list()) {
-                        File f = new File(serverPath + "/aboutme/" + s);
-                        boolean delete = f.delete();
-                        if (!delete) log.error("O'chirish imkonsiz");
-                        else log.info("Muvaffaqiyatli o'chirildi");
-                    }
+
                     AboutMe me = aboutMeRepository.findAll().get(0);
-                    me.setImgName(me.getImgName() + ".jpg");
+                    me.setImgName(update.getMessage().getPhoto().get(update.getMessage().getPhoto().size()-1).getFileId());
                     me.setType("photo");
                     aboutMeRepository.save(me);
-
-                    downloadImg(serverPath + "/aboutme/" + me.getImgName(), token, update.getMessage().getPhoto().get(update.getMessage().getPhoto().size() - 1));
-                    File file = new File(serverPath + "/aboutme/" + me.getImgName());
 
 
                     me = aboutMeRepository.findAll().get(0);
@@ -319,6 +320,18 @@ public class AdminRole {
                     eventCode(user, "crud about me");
                     if (me.getType().equals("photo")) {
                         bot.sendPhoto(chatId, filex, caption + "\n\nQuyidagilardan brini tanlang", kyb.crudBranch1());
+                        try {
+                            bot.execute(
+                                    SendPhoto.builder()
+                                            .caption(caption + "\n\nQuyidagilardan brini tanlang")
+                                            .chatId(chatId)
+                                            .replyMarkup(kyb.crudBranch1())
+                                            .build()
+                            );
+                        } catch (TelegramApiException e) {
+                            log.error(e.getMessage(), e);
+                        }
+
                         eventCode(user, "crud about me");
                     }
 
@@ -329,22 +342,12 @@ public class AdminRole {
                     getCompanyEditImgOrVideo(user, update.getMessage().getVideo(), serverPath, token, update.getMessage().getMessageId());
                 }
                 if (eventCode.equals("get img or video")) {
-                    File file1 = new File(serverPath + "/aboutme");
-                    if (!file1.exists()) {
-                        file1.mkdir();
-                    }
-                    for (String s : file1.list()) {
-                        File f = new File(serverPath + "/aboutme/" + s);
-                        boolean delete = f.delete();
-                        if (!delete) log.error("O'chirish imkonsiz");
-                    }
-                    AboutMe me = aboutMeRepository.findAll().get(0);
-                    me.setImgName(me.getImgName() + ".mp4");
-                    aboutMeRepository.save(me);
-                    downloadVideo(serverPath + "/aboutme/" + me.getImgName(), token, update.getMessage().getVideo());
 
+                    AboutMe me = aboutMeRepository.findAll().get(0);
+                    me.setImgName(update.getMessage().getVideo().getFileId());
+                    aboutMeRepository.save(me);
                     me = aboutMeRepository.findAll().get(0);
-                    File filex = new File(serverPath + "/aboutme/" + me.getImgName());
+
                     String caption = """
                             Kompaniya nomi: %s
                             ☎️ Aloqa markazi: (Telefon raqam): %s
@@ -353,8 +356,8 @@ public class AdminRole {
                         SendVideo sendVideo1 = new SendVideo();
                         sendVideo1.setChatId(chatId);
                         InputFile video = new InputFile();
-                        video.setMedia(filex);
-                        sendVideo1.setVideo(video);
+                        video.setMedia(new File(me.getImgName()));
+                        sendVideo1.setVideo(new InputFile(me.getImgName()));
                         sendVideo1.setCaption(caption + "\n\n✅Muvaffaqiyatli saqlandi\n\nQuyidagilardan brini tanlang");
                         sendVideo1.setReplyMarkup(kyb.crudBranch1());
                         bot.executes(sendVideo1);
@@ -494,21 +497,24 @@ public class AdminRole {
                 Kompaniya nomi: %s
                 ☎️ Aloqa markazi: (Telefon raqam): %s
                 """.formatted(me.getCompanyName(), me.getPhone());
-        String url = serverPath + "/aboutme/" + me.getImgName();
-        File file = new File(url);
-        boolean delete = file.delete();
-        if (delete) log.info("Muvaffaqiyatli o'chirildi");
-        else {
-            log.error("Nimagadir o'chirilmadi");
-            bot.sendMessage(user.getChatId(), "Kutilmagan xatolik rasmni qaytadan yuboring");
-            return;
-        }
+
         aboutMeRepository.save(me);
         bot.sendMessage(user.getChatId(), "Video yuklanmoqda...");
-        downloadVideo(url, token, video);
+
+
         bot.editMessageText(user.getChatId(), "✅ Muvaffaqiyatli yuklandi", messageId + 1);
+        try {
+            bot.execute(SendPhoto.builder()
+                            .chatId(user.getChatId())
+                            .replyMarkup(kyb.crudBranch1())
+                            .caption(                caption + "\n\n✅ Muvaffaqiyatli o'gartirildi\n\n Quyidagiladan birini tanlang")
+                            .photo(new InputFile(me.getImgName()))
+
+                    .build());
         eventCode(user, "crud about me");
-        sendVideo(user.getChatId(), serverPath + "/aboutme/" + me.getImgName(), caption + "\n\n✅ Muvaffaqiyatli o'gartirildi\n\n Quyidagiladan birini tanlang", kyb.crudBranch1());
+        } catch (TelegramApiException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     public void getCompanyEditImgOrVideo(User user, PhotoSize photo, String serverPath, String token, int messageId) {
@@ -518,25 +524,26 @@ public class AdminRole {
                 Kompaniya nomi: %s
                 ☎️ Aloqa markazi: (Telefon raqam): %s
                 """.formatted(me.getCompanyName(), me.getPhone());
-        String url = serverPath + "/aboutme/" + me.getImgName();
-        File file = new File(url);
-        boolean delete = file.delete();
-        if (delete) log.info("Muvaffaqiyatli o'chirildi");
-        else {
-            log.error("Nimagadir o'chirilmadi");
-            bot.sendMessage(user.getChatId(), "Kutilmagan xatolik rasmni qaytadan yuboring");
-            return;
-        }
+        me.setImgName(photo.getFileId());
         aboutMeRepository.save(me);
         bot.sendMessage(user.getChatId(), "Rasm yuklanmoqda...");
-        downloadImg(url, token, photo);
+
         bot.editMessageText(user.getChatId(), "✅ Muvaffaqiyatli yuklandi", messageId + 1);
         eventCode(user, "crud about me");
-        bot.sendPhoto(user.getChatId(), new File(serverPath + "/aboutme/" + me.getImgName())
-                , caption + "\n\n✅ Muvaffaqiyatli o'gartirildi\n\n Quyidagiladan birini tanlang", kyb.crudBranch1());
+        try {
+            bot.execute(
+                    SendPhoto.builder()
+                            .photo(new InputFile(photo.getFileId()))
+                            .chatId(user.getChatId())
+                            .caption(caption+ "\n\n✅ Muvaffaqiyatli o'gartirildi\n\n Quyidagiladan birini tanlang")
+                            .replyMarkup(kyb.crudBranch1())
+                            .build()
+
+            );
+        } catch (TelegramApiException e) {
+            log.error(e);
+        }
     }
-
-
     public void sendVideo(Long chatId, String fileUrl, String caption, InlineKeyboardMarkup markup) {
         SendVideo sendVideo = new SendVideo();
         sendVideo.setChatId(chatId);
@@ -545,7 +552,6 @@ public class AdminRole {
         sendVideo.setReplyMarkup(markup);
         bot.executes(sendVideo);
     }
-
     public void startCommand(User user) {
         bot.sendMessage(user.getChatId(), msg.menu, kyb.menu());
         eventCode(user, "menu");

@@ -256,17 +256,16 @@ public class UserRole {
         } else if (text.equals(texts[5])) {
             markup = kyb.setKeyboard(OrderKybMsg.back(user.getLang()));
             AboutMe me = aboutMeRepository.findAll().get(0);
-
             if (me.getType() == null) {
                 bot.sendMessage(user.getChatId(), msg.aboutMe(me, user.getLang()), markup);
                 return;
             }
-            File file = new File(serverPath + "/aboutme/" + me.getImgName());
+
             if (me.getType().equals("photo")) {
-                bot.sendPhoto(user.getChatId(), file, msg.aboutMe(me, user.getLang()), markup);
+                bot.sendPhoto(user.getChatId(), me.getImgName(), msg.aboutMe(me, user.getLang()), markup);
             } else if (me.getType().equals("video")) {
                 SendVideo sendVideo = new SendVideo();
-                InputFile inputFile = new InputFile(file);
+                InputFile inputFile = new InputFile(me.getImgName());
                 sendVideo.setVideo(inputFile);
                 sendVideo.setChatId(user.getChatId());
                 sendVideo.setCaption(msg.aboutMe(me, user.getLang()));
