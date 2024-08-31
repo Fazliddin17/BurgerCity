@@ -9,8 +9,8 @@ services:
     volumes:
       - /var/lib/postgresql/data
     environment:
-      POSTGRES_DB: first_db
-      POSTGRES_USER: first_user
+      POSTGRES_DB: fazik_db
+      POSTGRES_USER: fazik_user
       POSTGRES_PASSWORD: root
   web:
     container_name: Burger-City-bot-app
@@ -21,6 +21,6 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/first_db
-      SPRING_DATASOURCE_USERNAME: first_user
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/fazik_db
+      SPRING_DATASOURCE_USERNAME: fazik_user
       SPRING_DATASOURCE_PASSWORD: root
