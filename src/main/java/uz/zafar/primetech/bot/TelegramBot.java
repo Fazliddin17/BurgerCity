@@ -168,7 +168,11 @@ public class TelegramBot extends TelegramLongPollingBot {
                     this, userService, categoryService,
                     productService, adminKyb, adminMsg, branchRepository, aboutMeRepository
             );
-            adminRole.menu(user, update, url, getBotToken());
+            try {
+                adminRole.menu(user, update, url, getBotToken());
+            } catch (Exception e) {
+                sendMessage(chatId , e.getMessage());
+            }
         } else if (role.equals("user")) {
             UserRole userRole = new UserRole(
                     this, kyb, msg,
