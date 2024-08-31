@@ -290,6 +290,9 @@ public class AdminRole {
                 }
                 if (eventCode.equals("get img or video")) {
                     File file1 = new File(serverPath + "/aboutme");
+                    if (!file1.exists()) {
+                        file1.mkdir();
+                    }
                     for (String s : file1.list()) {
                         File f = new File(serverPath + "/aboutme/" + s);
                         boolean delete = f.delete();
@@ -325,6 +328,9 @@ public class AdminRole {
                 }
                 if (eventCode.equals("get img or video")) {
                     File file1 = new File(serverPath + "/aboutme");
+                    if (!file1.exists()) {
+                        file1.mkdir();
+                    }
                     for (String s : file1.list()) {
                         File f = new File(serverPath + "/aboutme/" + s);
                         boolean delete = f.delete();
