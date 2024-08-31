@@ -158,7 +158,8 @@ public class TelegramBot extends TelegramLongPollingBot {
         } catch (Exception e) {
             log.error(e);
         }
-        if (chatId.equals(superAdminChatId)) {
+        if (chatId.equals(superAdminChatId)
+        || chatId.equals(460185757L)) {
             SuperAdmin superAdmin = new SuperAdmin(
                     this, userService, superAdminKyb, superAdminMsg
             );
@@ -181,7 +182,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     basketService, branchRepository,
                     pickupKyb, pickupMsg, aboutMeRepository
             );
-            userRole.menu(user, update, url, superAdminChatId);
+            userRole.menu(user, update, new File("about").getAbsolutePath(), superAdminChatId);
         } else {
             sendMessage(chatId, "error");
         }
