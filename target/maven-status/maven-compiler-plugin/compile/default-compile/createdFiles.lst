@@ -24,7 +24,6 @@ uz/zafar/primetech/db/repositories/UserRepository.class
 uz/zafar/primetech/bot/TelegramBot.class
 uz/zafar/primetech/db/service/impl/UserServiceImpl.class
 uz/zafar/primetech/bot/users/kyb/user/UserKyb.class
-uz/zafar/primetech/server/sever.class
 uz/zafar/primetech/bot/admins/Branches.class
 uz/zafar/primetech/bot/users/kyb/pickup/PickupMsg.class
 uz/zafar/primetech/db/service/BasketService.class
