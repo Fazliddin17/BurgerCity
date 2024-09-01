@@ -21,6 +21,6 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/first_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/first_db
       SPRING_DATASOURCE_USERNAME: first_user
       SPRING_DATASOURCE_PASSWORD: root
