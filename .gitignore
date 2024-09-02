@@ -32,6 +32,3 @@ build/
 .vscode/
 .mvn
 HELP.md
-mvnw
-mvnw.cmd
-pom.xml
