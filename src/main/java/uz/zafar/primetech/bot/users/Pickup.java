@@ -553,23 +553,23 @@ public class Pickup {
             if (user.getLang().equals("uz")) {
                 h = """
                         Buyurtmangiz: %d ko'rib chiqilmoqda!
-                        Buyurtmangizni 60 daqiqa ichida yetkazib beramiz.
+                        Buyurtmangizni 30 daqiqa ichida Tayorlab beramiz.
                         """.formatted(user.getBaskets().get(user.getBaskets().size() - 1).getId());
             }
             if (user.getLang().equals("ru")) {
                 h = """
                         Ваш заказ: %d находится в обработке!
-                        Мы доставим ваш заказ в течение 60 минут.
+                        Мы подготовим ваш заказ в течение 30 минут.
                         """.formatted(user.getBaskets().get(user.getBaskets().size() - 1).getId());
             }
             if (user.getLang().equals("en")) {
                 h = """
                         Your order: %d is being processed!
-                        We will deliver your order within 60 minutes.
+                        We will prepare your order within 30 minutes.
                         """.formatted(user.getBaskets().get(user.getBaskets().size() - 1).getId());
             }
 //            bot.deleteMessage(user.getChatId(), callbackQuery.getMessage().getMessageId());
-            bot.editMessageText(user.getChatId(), h,callbackQuery.getMessage().getMessageId());
+            bot.editMessageText(user.getChatId(), h, callbackQuery.getMessage().getMessageId());
             bot.sendMessage(user.getChatId(), message, markup);
             userService.save(user);
         } else {
